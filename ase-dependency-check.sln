@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30317.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ase-dependency-check", "ase-dependency-check\ase-dependency-check.csproj", "{681FEDEB-85F2-4731-970A-66B709ADD8E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{681FEDEB-85F2-4731-970A-66B709ADD8E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{681FEDEB-85F2-4731-970A-66B709ADD8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{681FEDEB-85F2-4731-970A-66B709ADD8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{681FEDEB-85F2-4731-970A-66B709ADD8E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5068AF1F-6023-4FA3-8134-88559EB12DA3}
+	EndGlobalSection
+EndGlobal
