@@ -1,0 +1,7 @@
+{
+	"dependencies": [
+		"microsoft.com",
+		"microsoft.com:443",
+		"invalid-contoso.com"
+	]
+}

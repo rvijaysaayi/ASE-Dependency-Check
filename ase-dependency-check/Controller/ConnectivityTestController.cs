@@ -22,6 +22,9 @@ namespace ASEDependencyCheck.Controller
         {
             _conn = conn?? throw new ArgumentNullException(nameof(conn));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            string version = "v1.0.0.0";
+            _logger.LogInformation($"Running ASE-Dependency Checker {version}");
+            _logger.LogInformation("");
 
         }
 
@@ -65,6 +68,9 @@ namespace ASEDependencyCheck.Controller
                 bool fileLoadSuccessful = await LoadJsonFile();
                 if(fileLoadSuccessful)
                 {
+                    int i = 1;
+                    _logger.LogInformation("Loaded Json file with Endpoints.");
+                    _logger.LogInformation("");
                     foreach (string dependency in _endpoints.dependencies)
                     {
                         string[] temp =  dependency.Split(":");
@@ -78,10 +84,14 @@ namespace ASEDependencyCheck.Controller
                             hostName = temp[0];
                             port = Convert.ToInt32(temp[1]);
                         }
-
+                        _logger.LogInformation($"Testing connectivity to endpoint {i}/{_endpoints.dependencies.Count} - {hostName}:{port} for {maxTries} times");
                         await _conn.Tcpping(hostName, port, maxTries);
+                        i++;
 
+                        _logger.LogInformation("");
+                        _logger.LogInformation("");
                     }
+
                 }
             }
             else

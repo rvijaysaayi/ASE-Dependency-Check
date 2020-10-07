@@ -43,10 +43,7 @@ namespace ase_dependency_check
             IServiceProvider serviceProvider = services.BuildServiceProvider();
             AppRunner<ConnectivityTestController> appRunner = new AppRunner<ConnectivityTestController>();
             appRunner.UseMicrosoftDependencyInjection(serviceProvider);
-
-            string version = "v1.0.0.0";
-            Console.WriteLine($"Running ASE-Dependency Checker {version}");
-
+            
             return appRunner.Run(args);
 
 
