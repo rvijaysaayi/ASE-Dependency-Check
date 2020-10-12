@@ -3,7 +3,7 @@
 		"value": "1.0.0.0"
 	}
 	
-	"windows-dependencies": [
+	"windowsdependencies": [
 		"graph.microsoft.com:443"
 		"login.live.com:443"
 		"login.windows.com:443"
@@ -106,7 +106,7 @@
 		"13.82.184.151:443"	
 	]
 	
-	"linux-dependencies": [
+	"linuxdependencies": [
 		"wawsinfraprodbay063.blob.core.windows.net:443"
 		"registry-1.docker.io:443"
 		"auth.docker.io:443"
