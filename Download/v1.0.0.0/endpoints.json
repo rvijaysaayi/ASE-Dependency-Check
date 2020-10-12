@@ -1,8 +1,6 @@
 {
-	"version": {
-		"value": "1.0.0.0"
-	}
-	
+	"version": "1.0.0.0"
+
 	"windowsdependencies": [
 		"graph.microsoft.com:443"
 		"login.live.com:443"
