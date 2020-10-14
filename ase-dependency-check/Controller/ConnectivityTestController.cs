@@ -1,6 +1,7 @@
 ﻿using ASEDependencyCheck.Model;
 using ASEDependencyCheck.Services.Interfaces;
 using CommandDotNet;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace ASEDependencyCheck.Controller
 {
-
     public class ConnectivityTestController
     {
         private readonly ISocketConnection _conn;
@@ -28,8 +28,9 @@ namespace ASEDependencyCheck.Controller
 
         }
 
-        private async Task<bool> LoadJsonFile()
+        private async Task<bool> LoadJsonFile(string endptfilename)
         {
+            
             var options = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -37,7 +38,7 @@ namespace ASEDependencyCheck.Controller
             };
             try
             {
-                string jsonString = await File.ReadAllTextAsync("endpoints.json");
+                string jsonString = await File.ReadAllTextAsync(endptfilename);
                 _endpoints = JsonSerializer.Deserialize<Endpoints>(jsonString, options);
 
                 return true;
@@ -48,50 +49,81 @@ namespace ASEDependencyCheck.Controller
                 _logger.LogError("Unable to find endpoints.json file");
                 return false;
             }
-            
+        }
 
-            
+        private async Task CheckDependency(List<string> dependencies)
+        {
+            string hostName;
+            int port, i=1, maxTries = 4;
+            string[] temp;
+
+            DependencyCheckSummary dependencysummary = new DependencyCheckSummary();
+            // ds.totalDependenciesCalled = _endpoints.dependencies.Count;
+            dependencysummary.totalDependenciesCalled = dependencies.Count;
+            dependencysummary.totalDependenciesFailed = 0;
+
+            foreach (string dependency in dependencies)
+            {
+                temp = dependency.Split(":");
+                if (temp.Length == 1)
+                {
+                    hostName = temp[0];
+                    port = 80;
+                }
+                else
+                {
+                    hostName = temp[0];
+                    port = Convert.ToInt32(temp[1]);
+                }
+                _logger.LogInformation($"Testing connectivity to endpoint {i}/{dependencies.Count} - {hostName}:{port} for {maxTries} times");
+                await _conn.Tcpping(hostName, port, maxTries);
+
+                TcppingErrorSummary tcpsummary = await _conn.Tcpping(hostName, port, maxTries);
+                if (tcpsummary.successRate != 100)
+                {
+                    dependencysummary.totalDependenciesFailed++;
+                    dependencysummary.endpointsFailed.Add(tcpsummary.hostName + ":" + tcpsummary.port.ToString());
+                }
+                i++;
+
+                _logger.LogInformation("");
+                _logger.LogInformation("");
+            }
         }
 
         [Command(Name = "test-connectivity",
-        Usage = "get-token -e endpoints.json",
-        Description = "Gets a token for the specified resource")]
+        Usage = "test-connectivity -e endpoints.json -p platformType",
+        Description = "Tests connectivity to all endpoints in endpoints.json based on platformType")]
         public async Task TestConnectivity(
         [Option(LongName = "endpoint", ShortName = "e",
         Description = "location of endpoint.json file which contains the list of endpoints to tcpping ")]
-        string endpointFileName)
+        string endpointFileName, [Option(LongName = "platformType", ShortName = "p",
+        Description = "Indicates the platform type (windows/linux) to target dependency checks")]
+        string platformType)
         {
-            string hostName; int port, maxTries = 4;
             // 1. Validate the endpoint
             if (endpointFileName.Contains(".json"))
             {
-                bool fileLoadSuccessful = await LoadJsonFile();
+                bool fileLoadSuccessful = await LoadJsonFile(endpointFileName);
                 if(fileLoadSuccessful)
                 {
-                    int i = 1;
                     _logger.LogInformation("Loaded Json file with Endpoints.");
                     _logger.LogInformation("");
-                    foreach (string dependency in _endpoints.dependencies)
+
+                    if (platformType == "all")
                     {
-                        string[] temp =  dependency.Split(":");
-                        if(temp.Length == 1)
-                        {
-                            hostName = temp[0];
-                            port = 80;
-                        }
-                        else
-                        {
-                            hostName = temp[0];
-                            port = Convert.ToInt32(temp[1]);
-                        }
-                        _logger.LogInformation($"Testing connectivity to endpoint {i}/{_endpoints.dependencies.Count} - {hostName}:{port} for {maxTries} times");
-                        await _conn.Tcpping(hostName, port, maxTries);
-                        i++;
-
-                        _logger.LogInformation("");
-                        _logger.LogInformation("");
+                        await CheckDependency(_endpoints.dependencies["windowsdependencies"]);
+                        await CheckDependency(_endpoints.dependencies["linuxdependencies"]);
+                        
                     }
-
+                    else if (platformType == "linux" || platformType == "windows")
+                    {
+                        await CheckDependency(_endpoints.dependencies[$"{platformType}dependencies"]);
+                    }
+                    else
+                    {
+                        _logger.LogError("Invalid platformType value. Allowed values 'windows' or 'linux' or 'all'");
+                    }
                 }
             }
             else

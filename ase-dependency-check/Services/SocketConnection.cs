@@ -1,4 +1,5 @@
-﻿using ASEDependencyCheck.Services.Interfaces;
+﻿using ASEDependencyCheck.Model;
+using ASEDependencyCheck.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,12 @@ namespace ASEDependencyCheck.Services
 
         }
 
-        async Task ISocketConnection.Tcpping(string host, int port, int maxTries )
+        async Task<TcppingErrorSummary> ISocketConnection.Tcpping(string host, int port, int maxTries)
         {
-            
-            
+            TcppingErrorSummary tcpSummary = new TcppingErrorSummary();
+            tcpSummary.hostName = host;
+            tcpSummary.port = port;
+
             int success = 0;
             for (int i = 0; i < maxTries; i++)
             {
@@ -31,7 +34,6 @@ namespace ASEDependencyCheck.Services
                 sock.Blocking = true;
 
                 Stopwatch stopwatch = new Stopwatch();
-
                 
                 try
                 {
@@ -44,22 +46,20 @@ namespace ASEDependencyCheck.Services
                 catch(Exception ex)
                 {
                     _logger.LogError(ex.Message);
+                    tcpSummary.message = ex.Message;
                 }
-                
-
-                
-                
             
                 sock.Close();
 
                 Thread.Sleep(1000);
             }
 
-            _logger.LogInformation($"tcpping statistics for {host}:{port}:");
-            _logger.LogInformation($"Packets Sent = {maxTries}, Received = {success} , Loss = {maxTries-success} ({(maxTries-success)/maxTries * 100}% Loss)");
-                
-            
-            
+         tcpSummary.successRate = success / maxTries * 100;
+
+         _logger.LogInformation($"tcpping statistics for {host}:{port}:");
+         _logger.LogInformation($"Packets Sent = {maxTries}, Received = {success} , Loss = {maxTries-success} ({(maxTries-success)/maxTries * 100}% Loss)");
+
+         return tcpSummary;
         }
     }
 }
