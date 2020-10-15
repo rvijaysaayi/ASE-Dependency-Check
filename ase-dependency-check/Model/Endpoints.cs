@@ -7,6 +7,7 @@ namespace ASEDependencyCheck.Model
 {
     public class Endpoints
     {
-        public List<string> dependencies { get; set; }
+        public string version { get; set; }
+        public Dictionary<string, List<string>> dependencies { get; set; }
     }
 }
