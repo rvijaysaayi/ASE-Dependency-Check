@@ -135,8 +135,8 @@ namespace ASEDependencyCheck.Controller
 
                     if (platformType == "all")
                     {
-                        DependencyCheckSummary dependencysummarywindows = await CheckDependency(_endpoints.dependencies["windowsdependencies"]);
-                        DependencyCheckSummary dependencysummarylinux = await CheckDependency(_endpoints.dependencies["linuxdependencies"]);
+                        DependencyCheckSummary dependencysummarywindows = await CheckDependency(_endpoints.dependencies["windows"]);
+                        DependencyCheckSummary dependencysummarylinux = await CheckDependency(_endpoints.dependencies["linux"]);
 
                         _logger.LogInformation("-----------------------------------------------------------------------------------------------------------");
                         PrintSummary(dependencysummarywindows, "windows");
@@ -144,7 +144,7 @@ namespace ASEDependencyCheck.Controller
                     }
                     else if (platformType == "linux" || platformType == "windows")
                     {
-                        DependencyCheckSummary dependencysummary = await CheckDependency(_endpoints.dependencies[$"{platformType}dependencies"]);
+                        DependencyCheckSummary dependencysummary = await CheckDependency(_endpoints.dependencies[$"{platformType}"]);
                         _logger.LogInformation("-----------------------------------------------------------------------------------------------------------");
                         PrintSummary(dependencysummary, platformType);
                     }
