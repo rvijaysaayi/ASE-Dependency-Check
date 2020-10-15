@@ -59,7 +59,6 @@ namespace ASEDependencyCheck.Controller
             string[] temp;
 
             DependencyCheckSummary dependencySummary = new DependencyCheckSummary();
-            // ds.totalDependenciesCalled = _endpoints.dependencies.Count;
             dependencySummary.totalDependenciesCalled = dependencies.Count;
             dependencySummary.totalDependenciesFailed = 0;
             dependencySummary.endpointsFailed = new List<string>();
@@ -78,8 +77,6 @@ namespace ASEDependencyCheck.Controller
                     port = Convert.ToInt32(temp[1]);
                 }
                 _logger.LogInformation($"Testing connectivity to endpoint {i}/{dependencies.Count} - {hostName}:{port} for {maxTries} times");
-              //  await _conn.Tcpping(hostName, port, maxTries);
-
                 TcppingErrorSummary tcpsummary = await _conn.Tcpping(hostName, port, maxTries);
                 _logger.LogInformation("Returned from tcpping");
                 if (tcpsummary.successRate != 100)
@@ -97,7 +94,6 @@ namespace ASEDependencyCheck.Controller
             return dependencySummary;
         }
 
-        //private async Task PrintSummary(DependencyCheckSummary dependencySummary, string platformType)
         private void PrintSummary(DependencyCheckSummary dependencySummary, string platformType)
         {
                 _logger.LogInformation("");
