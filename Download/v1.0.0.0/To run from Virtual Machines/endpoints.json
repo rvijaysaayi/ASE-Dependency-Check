@@ -6,8 +6,6 @@
 	"windows": [
 		"graph.microsoft.com:443",
 		"login.live.com:443",
-		"login.windows.com:443",
-		"login.windows.net:443",
 		"login.microsoftonline.com:443",
 		"client.wns.windows.com:443",
 		"definitionupdates.microsoft.com:443",
@@ -29,7 +27,6 @@
 		"crl3.digicert.com:80",
 		"ocsp.digicert.com:80",
 		"ocsp.digicert.com:443",
-		"csc3-2009-2.crl.verisign.com:80",
 		"crl.verisign.com:80",
 		"ocsp.verisign.com:80",
 		"cacerts.digicert.com:80",
@@ -43,7 +40,6 @@
 		"azglobal-red.azglobal.metrics.nsatc.net:443",
 		"antares-black.antares.metrics.nsatc.net:443",
 		"antares-red.antares.metrics.nsatc.net:443",
-		"prod.microsoftmetrics.com:443",
 		"maupdateaccount.blob.core.windows.net:443",
 		"clientconfig.passport.net:443",
 		"packages.microsoft.com:443",
@@ -126,14 +122,7 @@
 		"apt-mo.trafficmanager.net:443",
 		"azure.archive.ubuntu.com:80",
 		"azure.archive.ubuntu.com:443",
-		"changelogs.ubuntu.com:80",
-		"13.74.252.37:11371",
-		"13.75.127.55:11371",
-		"13.76.190.189:11371",
-		"13.80.10.205:11371",
-		"13.91.48.226:11371",
-		"40.76.35.62:11371",
-		"104.215.95.108:11371"
+		"changelogs.ubuntu.com:80"
 	]	
 }
 }
